@@ -924,3 +924,7 @@ shape = SubResource("CapsuleShape2D_1tw87")
 disabled = true
 
 [node name="Area Checks" type="Node2D" parent="." unique_id=1194827986]
+
+[node name="Jump Move" type="Timer" parent="." unique_id=2099749952]
+wait_time = 2.0
+one_shot = true

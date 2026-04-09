@@ -4,8 +4,6 @@ extends CharacterBody2D
 
 
 
-
-
 # 
 var form_list = ['Pieface', 'Mocha', 'Cotton']
 var player_form = form_list[1]
@@ -43,13 +41,12 @@ func _physics_process(delta):
 	formAttributes()
 	formSwap()
 	
-	#
-	animate("idle")
+	animate()
 	
 	# Base physics
 	move_and_slide()
 	
-	walk(delta)
+	walk()
 	jump()
 	
 	gravity(delta)
@@ -66,7 +63,7 @@ func formAttributes():
 		form_collision = PIEFACE_COLLISION
 		#
 		speed = 8
-		jump_force = [1,4]
+		jump_force = [4,8]
 		weight = 1
 	
 	# MOCHA
@@ -75,7 +72,7 @@ func formAttributes():
 		form_collision = MOCHA_COLLISION
 		#
 		speed = 5
-		jump_force = [4,2]
+		jump_force = [8,4]
 		weight = 2
 		
 	# COTTON
@@ -84,7 +81,7 @@ func formAttributes():
 		form_collision = COTTON_COLLISION
 		#
 		speed = 3
-		jump_force = [1,1]
+		jump_force = [4,1]
 		weight = 4
 	
 	# Sprite visibility
@@ -113,37 +110,62 @@ func formSwap():
 # --- ANIMATION ---
 ##
 @onready var ANIMATE = $"Body Sprites/AnimationPlayer"
-func animate(animation):
-	# Play animation
-	ANIMATE.play(animation)
+func animate():
+	# If no movement, play idle animation.
+	if not velocity:
+		ANIMATE.play('idle')
 	
-	#
+	# - Turn sprites -
 	var direction = Input.get_axis('LEFT','RIGHT')
-	#
-	if direction <0:
-		form_sprite.flip_h = true
-	elif direction >0:
-		form_sprite.flip_h = false
+	## Flip all sprites based on input direction.
+	for i in PLAYER_SPRITES:
+		if direction <0:
+			i.flip_h = true
+		elif direction >0:
+			i.flip_h = false
 
 
 # --- MOVEMENT ---
 
 # -- WALK --
-func walk(delta):
+func walk():
+	#
+	var lock_walk : bool
+	if not is_on_floor():
+		lock_walk = true
+	
 	var direction = Input.get_axis('LEFT','RIGHT')
-	if direction != 0:
+	#
+	if direction != 0 and lock_walk == false:
+		ANIMATE.play('walk')
 		velocity.x = speed*15 * direction
-		ANIMATE.play("walk")
 	else:
 		velocity.x = move_toward(velocity.x,0, speed*100)
-		ANIMATE.play("idle")
 
+# -- JUMP --
+@onready var jump_move = $"Jump Move"
 func jump():
-	pass
+	var direction = Input.get_axis('LEFT','RIGHT')
+	# Determine if can jump
+	var can_jump : bool
+	## Cannot jump if off floor
+	if not is_on_floor():
+		can_jump = false
+	## Can jump
+	else:
+		can_jump = true
+	
+	# Perform jump on press
+	if Input.is_action_just_pressed("JUMP") and can_jump:
+		ANIMATE.play('jump')
+		velocity.y += jump_force[0]*-50
+		jump_move.start()
+		if jump_move.is_stopped():
+			velocity.x += jump_force[1]*5000*direction
 
 # --- MISC ---
 
 # -- GRAVITY --
 func gravity(delta):
 	if not is_on_floor():
-		velocity += velocity * 20 * weight * delta
+		velocity += get_gravity() * delta
