@@ -20,12 +20,12 @@ var player_form = form_list[1]
 # -- COLLISION --
 ## Main collision
 @onready var body_collision = $"Body Collision"
-## Individual forms' collisions
-@onready var COTTON_COLLISION = $"Body Collision/Cotton Collision"
-@onready var MOCHA_COLLISION = $"Body Collision/Mocha Collision"
-@onready var PIEFACE_COLLISION = $"Body Collision/Pieface Collision"
-## List of forms' collisions
-@onready var PLAYER_COLLISIONS = [COTTON_COLLISION, MOCHA_COLLISION, PIEFACE_COLLISION]
+## Individual forms' collision measures
+### Measure array : [radius,height, position.y]
+var COTTON_COLLISION_MEASURE = [5,12, -5]
+var MOCHA_COLLISION_MEASURE = [4, 12, -4]
+var PIEFACE_COLLISION_MEASURE = [3,8, -3]
+
 
 # Attributes
 ## 
@@ -41,6 +41,8 @@ func _physics_process(delta):
 	formAttributes()
 	formSwap()
 	
+	shape()
+	
 	animate()
 	
 	# Base physics
@@ -48,37 +50,41 @@ func _physics_process(delta):
 	
 	walk()
 	jump()
+	crawl()
+	climb()
 	
 	gravity(delta)
 
 
-# --- FORM STABILIZER ---
+
+# --- FORM ATTRIBUTES ---
 ## Current form's sprite
 var form_sprite : AnimatedSprite2D
-var form_collision : CollisionShape2D
 func formAttributes():
-	# MOCHA
+	# - Forms' Attributes -
+	var form_collision_measure : Array
+	## PIEFACE
 	if player_form == 'Pieface':
 		form_sprite = PIEFACE_SPRITE
-		form_collision = PIEFACE_COLLISION
+		form_collision_measure = PIEFACE_COLLISION_MEASURE
 		#
 		speed = 8
 		jump_force = [4,8]
 		weight = 1
 	
-	# MOCHA
+	## MOCHA
 	elif player_form == 'Mocha':
 		form_sprite = MOCHA_SPRITE
-		form_collision = MOCHA_COLLISION
+		form_collision_measure = MOCHA_COLLISION_MEASURE
 		#
 		speed = 5
 		jump_force = [8,4]
 		weight = 2
 		
-	# COTTON
+	## COTTON
 	elif player_form =='Cotton':
 		form_sprite = COTTON_SPRITE
-		form_collision = COTTON_COLLISION
+		form_collision_measure = COTTON_COLLISION_MEASURE
 		#
 		speed = 3
 		jump_force = [4,1]
@@ -92,8 +98,16 @@ func formAttributes():
 			i.visible = false
 	
 	# Apply collision values
-	body_collision.shape = form_collision.shape
-	body_collision.transform = form_collision.transform
+	## Apply crawling values
+	if is_crawling:
+		body_collision.shape.radius = form_collision_measure[0] / 2
+		body_collision.shape.height = form_collision_measure[1] / 2
+		body_collision.position.y = form_collision_measure[2] / 2
+	## Apply basic values
+	else:
+		body_collision.shape.radius = form_collision_measure[0]
+		body_collision.shape.height = form_collision_measure[1]
+		body_collision.position.y = form_collision_measure[2]
 
 
 # --- FORM SWAP ---
@@ -107,11 +121,34 @@ func formSwap():
 			player_form = 'Pieface'
 
 
+# --- SHAPE ---
+## Alter the shape of collisions
+func shape():
+	# Direction vairable
+	var direction = Input.get_axis('LEFT','RIGHT')
+	
+	# Flip crawl check collisions
+	## Variables
+	var CRAWL_UPPER_COLLISION = $"Area Checks/Crawl Checks/Crawl Upper-Check/CollisionShape2D"
+	var CRAWL_LOWER_COLLISION = $"Area Checks/Crawl Checks/Crawl Lower-Check/CollisionShape2D"
+	## 
+	if direction != 0:
+		CRAWL_UPPER_COLLISION.position.x = abs(CRAWL_UPPER_COLLISION.position.x) * direction
+		CRAWL_LOWER_COLLISION.position.x = abs(CRAWL_LOWER_COLLISION.position.x) * direction
+	
+	# Reposition crawl upper check based on player form
+	if player_form == 'Mocha':
+		CRAWL_UPPER_COLLISION.position.y = -7
+	elif player_form == 'Pieface':
+		CRAWL_UPPER_COLLISION.position.y = -4
+	else:
+		pass
+
 # --- ANIMATION ---
 ##
 @onready var ANIMATE = $"Body Sprites/AnimationPlayer"
 func animate():
-	# If no movement, play idle animation.
+	# If no movement
 	if not velocity:
 		ANIMATE.play('idle')
 	
@@ -125,27 +162,26 @@ func animate():
 			i.flip_h = false
 
 
+
 # --- MOVEMENT ---
 
 # -- WALK --
 func walk():
-	#
-	var lock_walk : bool
-	if not is_on_floor():
-		lock_walk = true
 	
 	var direction = Input.get_axis('LEFT','RIGHT')
 	#
-	if direction != 0 and lock_walk == false:
-		ANIMATE.play('walk')
+	if direction != 0:
+		if is_on_floor():
+			ANIMATE.play('walk')
 		velocity.x = speed*15 * direction
 	else:
-		velocity.x = move_toward(velocity.x,0, speed*100)
+		velocity.x = move_toward(velocity.x, 0, speed*100)
+
+
 
 # -- JUMP --
-@onready var jump_move = $"Jump Move"
+# OLD JUMP -- UPDATE WHEN ABLE
 func jump():
-	var direction = Input.get_axis('LEFT','RIGHT')
 	# Determine if can jump
 	var can_jump : bool
 	## Cannot jump if off floor
@@ -159,9 +195,54 @@ func jump():
 	if Input.is_action_just_pressed("JUMP") and can_jump:
 		ANIMATE.play('jump')
 		velocity.y += jump_force[0]*-50
-		jump_move.start()
-		if jump_move.is_stopped():
-			velocity.x += jump_force[1]*5000*direction
+
+# -- CRAWL --
+@onready var CRAWL_UPPER_CHECK = $"Area Checks/Crawl Checks/Crawl Upper-Check"
+@onready var CRAWL_LOWER_CHECK = $"Area Checks/Crawl Checks/Crawl Lower-Check"
+var is_crawling : bool
+func crawl():
+	var can_crawl : bool
+	if not is_on_floor():
+		can_crawl = false
+	elif player_form == 'Cotton':
+		can_crawl = false
+	else:
+		can_crawl = true
+	
+	# 
+	if CRAWL_UPPER_CHECK.has_overlapping_bodies() and not CRAWL_LOWER_CHECK.has_overlapping_bodies() and can_crawl:
+		is_crawling = true
+	else:
+		is_crawling = false
+	
+	# 
+	if is_crawling:
+		ANIMATE.play('crawl')
+
+
+
+# -- CLIMB --
+## Ladder func is in ladder object
+@onready var CLIMB_CHECK = $"Area Checks/Climb Check"
+func climb():
+	var can_climb : bool
+	# Determine if can climb
+	## If Cotton, cannot climb
+	if player_form == 'Cotton':
+		can_climb = false
+	else:
+		can_climb = true
+	
+	var nonzero_direction
+	if Input.get_axis('LEFT','RIGHT') != 0:
+		nonzero_direction = Input.get_axis('LEFT','RIGHT')
+	
+	if Input.is_action_pressed('UP') and is_on_wall() and can_climb:
+		ANIMATE.play('climb flat')
+		velocity.y = -50
+		velocity.x += 2 * nonzero_direction
+
+
 
 # --- MISC ---
 

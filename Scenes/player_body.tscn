@@ -866,13 +866,14 @@ animations = [{
 radius = 5.0
 height = 12.0
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_de3nv"]
-radius = 4.0
-height = 12.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5xga4"]
+size = Vector2(14, 2)
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1tw87"]
-radius = 3.0
-height = 8.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_de3nv"]
+size = Vector2(14, 2)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1tw87"]
+size = Vector2(11, 10)
 
 [node name="Player Body" type="CharacterBody2D" unique_id=552994776]
 script = ExtResource("1_5xga4")
@@ -883,20 +884,19 @@ script = ExtResource("1_5xga4")
 libraries/ = SubResource("AnimationLibrary_1xrx6")
 
 [node name="Cotton Sprite" type="AnimatedSprite2D" parent="Body Sprites" unique_id=1331859714]
+visible = false
 position = Vector2(0, -11)
 sprite_frames = SubResource("SpriteFrames_0xb5r")
 animation = &"idle"
 autoplay = "idle"
 
 [node name="Mocha Sprite" type="AnimatedSprite2D" parent="Body Sprites" unique_id=1885420872]
-visible = false
 position = Vector2(0, -7)
 sprite_frames = SubResource("SpriteFrames_n2u3l")
 animation = &"idle"
 autoplay = "idle"
 
 [node name="Pieface Sprite" type="AnimatedSprite2D" parent="Body Sprites" unique_id=724196096]
-visible = false
 position = Vector2(0, -7)
 sprite_frames = SubResource("SpriteFrames_xdlpb")
 animation = &"idle"
@@ -904,27 +904,35 @@ autoplay = "idle"
 
 [node name="Body Collision" type="CollisionShape2D" parent="." unique_id=103570056]
 visible = false
-
-[node name="Cotton Collision" type="CollisionShape2D" parent="Body Collision" unique_id=367550714]
 position = Vector2(0, -5)
 rotation = -1.5707964
 shape = SubResource("CapsuleShape2D_5xga4")
-disabled = true
-
-[node name="Mocha Collision" type="CollisionShape2D" parent="Body Collision" unique_id=760282697]
-position = Vector2(0, -4)
-rotation = -1.5707964
-shape = SubResource("CapsuleShape2D_de3nv")
-disabled = true
-
-[node name="Pieface Collision" type="CollisionShape2D" parent="Body Collision" unique_id=1999549659]
-position = Vector2(0, -3)
-rotation = -1.5707964
-shape = SubResource("CapsuleShape2D_1tw87")
-disabled = true
 
 [node name="Area Checks" type="Node2D" parent="." unique_id=1194827986]
 
-[node name="Jump Move" type="Timer" parent="." unique_id=2099749952]
-wait_time = 2.0
-one_shot = true
+[node name="Crawl Checks" type="Node2D" parent="Area Checks" unique_id=1921691214]
+visible = false
+
+[node name="Crawl Upper-Check" type="Area2D" parent="Area Checks/Crawl Checks" unique_id=1783337239]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area Checks/Crawl Checks/Crawl Upper-Check" unique_id=1547835849]
+position = Vector2(3, -7)
+shape = SubResource("RectangleShape2D_5xga4")
+
+[node name="Crawl Lower-Check" type="Area2D" parent="Area Checks/Crawl Checks" unique_id=457736403]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area Checks/Crawl Checks/Crawl Lower-Check" unique_id=1866514534]
+position = Vector2(3, -1)
+shape = SubResource("RectangleShape2D_de3nv")
+
+[node name="Climb Check" type="Area2D" parent="Area Checks" unique_id=830035311]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area Checks/Climb Check" unique_id=882086229]
+position = Vector2(5.5, -7)
+shape = SubResource("RectangleShape2D_1tw87")
