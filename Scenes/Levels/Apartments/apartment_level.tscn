@@ -1,0 +1,15 @@
+[gd_scene format=4 uid="uid://c302h81dwv7p5"]
+
+[ext_resource type="PackedScene" uid="uid://c66ffrcsawgf1" path="res://Scenes/Levels/Apartments/greenroom.tscn" id="1_1s8ao"]
+[ext_resource type="PackedScene" uid="uid://cgyijtuoj71uy" path="res://Scenes/Levels/Apartments/redroom.tscn" id="2_433i4"]
+[ext_resource type="PackedScene" uid="uid://cu3bt3bl0pvpn" path="res://Scenes/-- MAIN --/collision_tilemap.tscn" id="3_4o6rg"]
+
+[node name="Apartment Level" type="Node2D" unique_id=341631712]
+
+[node name="Collision Tilemap" parent="." unique_id=75242511 instance=ExtResource("3_4o6rg")]
+tile_map_data = PackedByteArray("AAAdAAAAAAAAAAAAAAAeAAAAAAAAAAAAAAAfAAAAAAAAAAAAAAAgAP//AAAAAAAAAAAZAAYAAAAAAAAAAAAaAAYAAAAAAAAAAAAbAAYAAAAAAAAAAAAcAAYAAAAAAAAAAAAdAAYAAAAAAAAAAAAfAAUAAAAAAAAAAAAgAAUAAAAAAAAAAAAhAAUAAAAAAAAAAAAiAAUAAAAAAAAAAAAjAAUAAAAAAAAAAAAkAAUAAAAAAAAAAAAdAAUAAAAAAAAAAAAeAAUAAAAAAAAAAAAlAAUAAAAAAAAAAAAmAAUAAAAAAAAAAAAnAAUAAAAAAAAAAAAnAAQAAAAAAAAAAAAnAAMAAAAAAAAAAAAnAAIAAAAAAAAAAAAnAAAAAAAAAAAAAAAnAP//AAAAAAAAAAAnAP7/AAAAAAAAAAAnAP3/AAAAAAAAAAAnAAEAAAAAAAAAAAAgAAAAAAAAAAAAAAA=")
+
+[node name="Greenroom" parent="." unique_id=2063024199 instance=ExtResource("1_1s8ao")]
+
+[node name="Redroom" parent="." unique_id=1812197507 instance=ExtResource("2_433i4")]
+position = Vector2(208, -112)

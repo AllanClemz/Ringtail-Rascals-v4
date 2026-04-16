@@ -43,7 +43,7 @@ func _physics_process(delta):
 	
 	shape()
 	
-	animate()
+	#animate()
 	
 	# Base physics
 	move_and_slide()
@@ -69,7 +69,7 @@ func formAttributes():
 		form_collision_measure = PIEFACE_COLLISION_MEASURE
 		#
 		speed = 8
-		jump_force = [4,8]
+		jump_force = [3,1]
 		weight = 1
 	
 	## MOCHA
@@ -78,8 +78,8 @@ func formAttributes():
 		form_collision_measure = MOCHA_COLLISION_MEASURE
 		#
 		speed = 5
-		jump_force = [8,4]
-		weight = 2
+		jump_force = [1,3]
+		weight = 3
 		
 	## COTTON
 	elif player_form =='Cotton':
@@ -87,8 +87,8 @@ func formAttributes():
 		form_collision_measure = COTTON_COLLISION_MEASURE
 		#
 		speed = 3
-		jump_force = [4,1]
-		weight = 4
+		jump_force = [2,2]
+		weight = 5
 	
 	# Sprite visibility
 	for i in PLAYER_SPRITES:
@@ -122,21 +122,31 @@ func formSwap():
 
 
 # --- SHAPE ---
+## List of every area check
+@onready var AREA_CHECK_LIST = [$"Area Checks/Crawl Checks/Crawl Upper-Check", $"Area Checks/Crawl Checks/Crawl Lower-Check", $"Area Checks/Climb Check"]
 ## Alter the shape of collisions
 func shape():
 	# Direction vairable
 	var direction = Input.get_axis('LEFT','RIGHT')
 	
-	# Flip crawl check collisions
-	## Variables
-	var CRAWL_UPPER_COLLISION = $"Area Checks/Crawl Checks/Crawl Upper-Check/CollisionShape2D"
-	var CRAWL_LOWER_COLLISION = $"Area Checks/Crawl Checks/Crawl Lower-Check/CollisionShape2D"
-	## 
+	# - Turn sprites -
+	## Flip all sprites based on input direction.
+	for i in PLAYER_SPRITES:
+		if direction <0:
+			i.flip_h = true
+		elif direction >0:
+			i.flip_h = false
+	
+	
+	# - Area checks -
+	# Flip area check collisions
 	if direction != 0:
-		CRAWL_UPPER_COLLISION.position.x = abs(CRAWL_UPPER_COLLISION.position.x) * direction
-		CRAWL_LOWER_COLLISION.position.x = abs(CRAWL_LOWER_COLLISION.position.x) * direction
+		for i in AREA_CHECK_LIST:
+			var area_child = i.get_child(0)
+			area_child.position.x = abs(area_child.position.x) * direction
 	
 	# Reposition crawl upper check based on player form
+	var CRAWL_UPPER_COLLISION = $"Area Checks/Crawl Checks/Crawl Upper-Check/CollisionShape2D"
 	if player_form == 'Mocha':
 		CRAWL_UPPER_COLLISION.position.y = -7
 	elif player_form == 'Pieface':
@@ -147,41 +157,77 @@ func shape():
 # --- ANIMATION ---
 ##
 @onready var ANIMATE = $"Body Sprites/AnimationPlayer"
+##
+var animation_queue : Array
 func animate():
-	# If no movement
-	if not velocity:
-		ANIMATE.play('idle')
+	# Removes animations
+	## X-Axis movement input
+	if Input.get_axis('LEFT','RIGHT') == 0:
+		animation_queue.erase('walk')
+		if animation_queue.has('crawl'):
+			ANIMATE.pause()
+	## Steady
+	### Overlap walk
+	if animation_queue.has('reach') and animation_queue.has('walk'):
+		animation_queue.erase('walk')
+	### Remove if no input
+	if not Input.is_action_just_pressed('UP'):
+		animation_queue.erase('reach')
+	## If not on floor
+	if not is_on_floor():
+		animation_queue.erase('walk')
+		animation_queue.erase('reach')
+		animation_queue.erase('crawl')
+	## Jump and Fall
+	if velocity.y > 0:
+		animation_queue.erase('jump')
+	else:
+		animation_queue.erase('fall')
 	
-	# - Turn sprites -
-	var direction = Input.get_axis('LEFT','RIGHT')
-	## Flip all sprites based on input direction.
-	for i in PLAYER_SPRITES:
-		if direction <0:
-			i.flip_h = true
-		elif direction >0:
-			i.flip_h = false
-
+	if not animation_queue.is_empty():
+		ANIMATE.play(animation_queue[0])
+	else:
+		ANIMATE.play('idle')
 
 
 # --- MOVEMENT ---
+
+# -- steady --
+var is_steadying : bool
+func steady():
+	if Input.is_action_pressed('UP'):
+		is_steadying = true
+	else:
+		is_steadying = false
+	
+	if is_steadying:
+		ANIMATE.play('reach')
+
 
 # -- WALK --
 func walk():
 	
 	var direction = Input.get_axis('LEFT','RIGHT')
 	#
-	if direction != 0:
-		if is_on_floor():
+	if direction != 0 and is_on_floor():
+		if Input.is_action_pressed('UP'):
+			ANIMATE.play('reach')
+		else:
 			ANIMATE.play('walk')
 		velocity.x = speed*15 * direction
-	else:
-		velocity.x = move_toward(velocity.x, 0, speed*100)
+	# If no direction and is on floor, stop x-velocity.
+	elif is_on_floor():
+		if Input.is_action_pressed('UP'):
+			ANIMATE.play('reach')
+		else:
+			ANIMATE.play('idle')
+		velocity.x = move_toward(velocity.x,0, speed*15)
 
 
 
 # -- JUMP --
-# OLD JUMP -- UPDATE WHEN ABLE
 func jump():
+	var direction = Input.get_axis('LEFT','RIGHT')
 	# Determine if can jump
 	var can_jump : bool
 	## Cannot jump if off floor
@@ -194,7 +240,13 @@ func jump():
 	# Perform jump on press
 	if Input.is_action_just_pressed("JUMP") and can_jump:
 		ANIMATE.play('jump')
-		velocity.y += jump_force[0]*-50
+		velocity.y = jump_force[1]*-125
+	
+	# Jump move
+	if velocity.y < 0:
+		velocity.x = jump_force[0]*50 * direction
+	elif velocity.y > 0:
+		velocity.x = jump_force[0]*30 * direction
 
 # -- CRAWL --
 @onready var CRAWL_UPPER_CHECK = $"Area Checks/Crawl Checks/Crawl Upper-Check"
@@ -224,23 +276,27 @@ func crawl():
 # -- CLIMB --
 ## Ladder func is in ladder object
 @onready var CLIMB_CHECK = $"Area Checks/Climb Check"
+
+var is_climbing : bool
 func climb():
 	var can_climb : bool
 	# Determine if can climb
 	## If Cotton, cannot climb
 	if player_form == 'Cotton':
 		can_climb = false
+	elif is_crawling:
+		can_climb = false
 	else:
 		can_climb = true
 	
-	var nonzero_direction
-	if Input.get_axis('LEFT','RIGHT') != 0:
-		nonzero_direction = Input.get_axis('LEFT','RIGHT')
-	
-	if Input.is_action_pressed('UP') and is_on_wall() and can_climb:
+	var direction = Input.get_axis('LEFT','RIGHT')
+	if Input.is_action_pressed('UP') and CLIMB_CHECK.has_overlapping_bodies() and can_climb:
+		is_climbing = true
 		ANIMATE.play('climb flat')
 		velocity.y = -50
-		velocity.x += 2 * nonzero_direction
+		velocity.x = 5 * direction
+	else:
+		is_climbing = false
 
 
 
@@ -248,5 +304,15 @@ func climb():
 
 # -- GRAVITY --
 func gravity(delta):
+	var max_fall_speed = weight*75
 	if not is_on_floor():
-		velocity += get_gravity() * delta
+		# Fall
+		## If reaches max fall speed, limit fall.
+		if velocity.y > max_fall_speed:
+			pass
+		## Regular gravity
+		else:
+			velocity.y += get_gravity().y * delta *  weight / 3
+		# If falling
+		if velocity.y > 0:
+			ANIMATE.play('fall')
