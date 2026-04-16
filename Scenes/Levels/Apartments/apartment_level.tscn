@@ -12,4 +12,4 @@ tile_map_data = PackedByteArray("AAAdAAAAAAAAAAAAAAAeAAAAAAAAAAAAAAAfAAAAAAAAAAA
 [node name="Greenroom" parent="." unique_id=2063024199 instance=ExtResource("1_1s8ao")]
 
 [node name="Redroom" parent="." unique_id=1812197507 instance=ExtResource("2_433i4")]
-position = Vector2(208, -112)
+position = Vector2(-256, -16)
