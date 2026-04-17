@@ -11,3 +11,6 @@ script = ExtResource("1_kt108")
 
 [node name="Player Body" parent="." unique_id=552994776 instance=ExtResource("2_rumbs")]
 position = Vector2(336, 96)
+
+[node name="Out View" type="Camera2D" parent="Player Body" unique_id=509928828]
+position = Vector2(0, -48)
