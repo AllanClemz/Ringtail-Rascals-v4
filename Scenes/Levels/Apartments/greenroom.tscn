@@ -4,15 +4,17 @@
 [ext_resource type="Texture2D" uid="uid://b72p10mxkg4cl" path="res://Assets/Texture Grounds/Green Room v2.2.png" id="1_snxx6"]
 [ext_resource type="Texture2D" uid="uid://tkfm5tw8s4eh" path="res://Assets/Texture Grounds/Green Room HandRail.png" id="2_p1vnc"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p1vnc"]
+size = Vector2(400, 112)
+
 [node name="Greenroom" type="Node2D" unique_id=2063024199 groups=["Room Group"]]
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=539241289]
-zoom = Vector2(6, 6)
-limit_left = 0
-limit_top = 0
-limit_right = 400
-limit_bottom = 112
-position_smoothing_enabled = true
+[node name="Room Area" type="Area2D" parent="." unique_id=308095022]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room Area" unique_id=725537664]
+position = Vector2(200, 56)
+shape = SubResource("RectangleShape2D_p1vnc")
 
 [node name="Texture Grounds" type="Node2D" parent="." unique_id=554611180]
 

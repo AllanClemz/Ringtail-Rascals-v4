@@ -919,6 +919,13 @@ size = Vector2(8, 6)
 [node name="Player Body" type="CharacterBody2D" unique_id=552994776]
 script = ExtResource("1_5xga4")
 
+[node name="Camera2D" type="Camera2D" parent="." unique_id=659680944]
+position = Vector2(0, -40)
+limit_smoothed = true
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
+rotation_smoothing_enabled = true
+
 [node name="Body Sprites" type="Node2D" parent="." unique_id=1535803964]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Body Sprites" unique_id=1841393126]
