@@ -1,18 +1,18 @@
 [gd_scene format=3 uid="uid://be1srvyy42ckw"]
 
-[ext_resource type="Texture2D" uid="uid://bbhnmr3q4326y" path="res://Assets/Tilesets/Movables Tileset V1-1.png.png" id="1_u7j4s"]
-[ext_resource type="Script" uid="uid://btk32icnacb2i" path="res://Scripts/ladder.gd" id="2_2g1wp"]
+[ext_resource type="Script" uid="uid://j2wiue4ykdvj" path="res://Scripts/ladder.gd" id="2_2g1wp"]
+[ext_resource type="Texture2D" uid="uid://d2e68qrcleqtk" path="res://Assets/Tilesets/Ladders TileSet V1.png" id="2_6713q"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2g1wp"]
 size = Vector2(16, 16)
 
 [node name="Ladder" type="StaticBody2D" unique_id=2076361498]
-z_index = -3
+z_index = -10
 script = ExtResource("2_2g1wp")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1482554456]
 position = Vector2(8, 8)
-texture = ExtResource("1_u7j4s")
+texture = ExtResource("2_6713q")
 region_enabled = true
 region_rect = Rect2(16, 16, 16, 16)
 

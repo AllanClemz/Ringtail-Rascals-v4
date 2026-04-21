@@ -34,7 +34,7 @@ z_index = 10
 position = Vector2(200, 8)
 
 [node name="Handrail" type="TextureRect" parent="Texture Grounds" unique_id=567696093]
-z_index = 10
+z_index = -5
 offset_right = 400.0
 offset_bottom = 112.0
 texture = ExtResource("2_p1vnc")

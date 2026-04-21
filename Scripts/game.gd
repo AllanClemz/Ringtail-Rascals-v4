@@ -42,11 +42,11 @@ func detect():
 		else:
 			swap_queue.erase(i)
 		
-		# Call functions
-		var current = swap_queue[0]
-		camera(current)
-		var ROOM = current.get_parent()
-		roomOverlay(ROOM)
+	# Call functions
+	var current = swap_queue[0]
+	camera(current)
+	var ROOM = current.get_parent()
+	roomOverlay(ROOM)
 
 func camera(area):
 	# Collision of room area

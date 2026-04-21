@@ -1,7 +1,6 @@
 [gd_scene format=4 uid="uid://di02cp1jcrwtk"]
 
 [ext_resource type="PackedScene" uid="uid://cu3bt3bl0pvpn" path="res://Scenes/-- MAIN --/collision_tilemap.tscn" id="1_utiui"]
-[ext_resource type="PackedScene" uid="uid://be1srvyy42ckw" path="res://Scenes/Objects/ladder.tscn" id="2_5k20w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_utiui"]
 size = Vector2(272, 128)
@@ -19,9 +18,3 @@ shape = SubResource("RectangleShape2D_utiui")
 tile_map_data = PackedByteArray("AAD8//j/AAAAAAAAAAD7//j/AAAAAAAAAAD6//j/AAAAAAAAAAD5//j/AAAAAAAAAAD4//j/AAAAAAAAAAD3//j/AAAAAAAAAAD2//j/AAAAAAAAAAD1//j/AAAAAAAAAAD0//j/AAAAAAAAAAD0////AAAAAAAAAADz////AAAAAAAAAADy////AAAAAAAAAADx////AAAAAAAAAADz//j/AAAAAAAAAADy//j/AAAAAAAAAADx//j/AAAAAAAAAAD1////AAAAAAAAAADw////AAAAAAAAAADw//j/AAAAAAAAAAD2////AAAAAAAAAAD8////AAAAAAAAAAD7////AAAAAAAAAAD8//n/AAAAAAAAAAD8//r/AAAAAAAAAAD8//v/AAAAAAAAAADv////AAAAAAAAAADu////AAAAAAAAAADt////AAAAAAAAAADs////AAAAAAAAAADs//7/AAAAAAAAAADs//3/AAAAAAAAAADs//z/AAAAAAAAAADs//v/AAAAAAAAAADs//r/AAAAAAAAAADs//n/AAAAAAAAAADs//j/AAAAAAAAAADt//j/AAAAAAAAAADu//j/AAAAAAAAAADv//j/AAAAAAAAAAD3////AAAEAAEAAAA=")
 
 [node name="Texture Grounds" type="Node2D" parent="." unique_id=1463339289]
-
-[node name="Ladder" parent="." unique_id=2076361498 instance=ExtResource("2_5k20w")]
-position = Vector2(-272, -64)
-
-[node name="Ladder2" parent="." unique_id=185958960 instance=ExtResource("2_5k20w")]
-position = Vector2(-272, -80)

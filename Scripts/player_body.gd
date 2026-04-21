@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+class_name player_body
+
 # --- VARIABLES ---
 
 # Player Body
@@ -161,10 +163,15 @@ func shape():
 # -- steady --
 func steady():
 	if Input.is_action_pressed('UP'):
-		ANIMATE.play('reach')
+		# Add steady mask value
 		set_collision_mask_value(3,true)
+		# Set to steady z-index
+		z_index = -6
 	else:
+		# Remove steady mask value
 		set_collision_mask_value(3,false)
+		# Set to default z-index
+		z_index = 0
 
 
 # -- WALK --
@@ -238,7 +245,7 @@ func crawl():
 
 # -- CLIMB --
 ## Ladder func is in ladder object
-@onready var CLIMB_CHECK = $"Area Checks/Climb Check"
+@onready var CLIMB_CHECK : Area2D = $"Area Checks/Climb Check"
 
 var is_climbing : bool
 func climb():
@@ -247,20 +254,33 @@ func climb():
 	## If Cotton, cannot climb
 	if player_form == 'Cotton':
 		can_climb = false
+	## Cannot climb from crawl
 	elif is_crawling:
 		can_climb = false
 	else:
 		can_climb = true
 	
 	var direction = Input.get_axis('LEFT','RIGHT')
+	
+	# Detect ladder
+	var ladder_body
+	var is_on_ladder
+	for i in CLIMB_CHECK.get_overlapping_bodies():
+		if i is ladder:
+			ladder_body = i
+			is_on_ladder = ladder_body.player_on_ladder
+	
 	if Input.is_action_pressed('UP') and CLIMB_CHECK.has_overlapping_bodies() and can_climb:
 		is_climbing = true
+	elif is_on_ladder:
+		is_climbing = true
+	else:
+		is_climbing = false
+	
+	if is_climbing:
 		ANIMATE.play('climb flat')
 		velocity.y = -50
 		velocity.x = 5 * direction
-	else:
-		is_climbing = false
-
 
 
 # --- MISC ---
