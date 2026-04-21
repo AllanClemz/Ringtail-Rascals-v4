@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://cu3bt3bl0pvpn" path="res://Scenes/-- MAIN --/collision_tilemap.tscn" id="1_p1vnc"]
 [ext_resource type="Texture2D" uid="uid://b72p10mxkg4cl" path="res://Assets/Texture Grounds/Green Room v2.2.png" id="1_snxx6"]
 [ext_resource type="Texture2D" uid="uid://tkfm5tw8s4eh" path="res://Assets/Texture Grounds/Green Room HandRail.png" id="2_p1vnc"]
+[ext_resource type="PackedScene" uid="uid://xy8unp5axpt2" path="res://Scenes/Misc/greenroom_ceiling.tscn" id="3_uad38"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p1vnc"]
 size = Vector2(400, 112)
@@ -28,7 +29,12 @@ offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("1_snxx6")
 
-[node name="Foreground" type="TextureRect" parent="Texture Grounds" unique_id=567696093]
+[node name="Greenroom Ceiling" parent="Texture Grounds" unique_id=1531458767 instance=ExtResource("3_uad38")]
+z_index = 10
+position = Vector2(200, 8)
+
+[node name="Handrail" type="TextureRect" parent="Texture Grounds" unique_id=567696093]
+z_index = 10
 offset_right = 400.0
 offset_bottom = 112.0
 texture = ExtResource("2_p1vnc")

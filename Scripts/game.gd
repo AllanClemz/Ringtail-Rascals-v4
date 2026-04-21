@@ -33,20 +33,20 @@ func _process(_delta):
 
 
 # --- INDIVIDUAL FUNCS ---
+var swap_queue : Array
 func detect():
-	var swap_queue : Array
 	for i : Area2D in ROOM_AREA_BANK:
-		# Detect player in room area
-		for x in i.get_overlapping_bodies():
-			if x == PLAYER:
-				# Append to queue
+		if i.overlaps_body(PLAYER):
+			if not swap_queue.has(i):
 				swap_queue.append(i)
-				print(swap_queue)
-				
-				# Call functions for camera
-				camera(swap_queue[0])
-				var ROOM = swap_queue[0].get_parent()
-				roomOverlay(ROOM)
+		else:
+			swap_queue.erase(i)
+		
+		# Call functions
+		var current = swap_queue[0]
+		camera(current)
+		var ROOM = current.get_parent()
+		roomOverlay(ROOM)
 
 func camera(area):
 	# Collision of room area

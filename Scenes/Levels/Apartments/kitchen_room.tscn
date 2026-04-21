@@ -8,6 +8,7 @@ size = Vector2(240, 112)
 [node name="Kitchen Room" type="Node2D" unique_id=1347215027 groups=["Room Group"]]
 
 [node name="Room Area" type="Area2D" parent="." unique_id=1565921137]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Room Area" unique_id=677091830]
 position = Vector2(72, -40)
