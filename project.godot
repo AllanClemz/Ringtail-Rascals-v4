@@ -60,7 +60,7 @@ INTERACT={
 
 2d_physics/layer_1="BASE"
 2d_physics/layer_2="TILE DETECT"
-2d_physics/layer_3="One-Way"
+2d_physics/layer_3="STEADY"
 
 [physics]
 

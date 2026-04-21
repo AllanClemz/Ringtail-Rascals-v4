@@ -32,37 +32,48 @@ func _process(_delta):
 	detect()
 
 
-
+# --- INDIVIDUAL FUNCS ---
 func detect():
+	var swap_queue : Array
 	for i : Area2D in ROOM_AREA_BANK:
-		var ROOM = i.get_parent()
+		# Detect player in room area
 		for x in i.get_overlapping_bodies():
-				if x == PLAYER:
-					camera(i)
-					roomOverlay(ROOM)
-					
+			if x == PLAYER:
+				# Append to queue
+				swap_queue.append(i)
+				print(swap_queue)
+				
+				# Call functions for camera
+				camera(swap_queue[0])
+				var ROOM = swap_queue[0].get_parent()
+				roomOverlay(ROOM)
 
 func camera(area):
+	# Collision of room area
 	var area_collision : CollisionShape2D = area.get_child(0)
-	
+	# Origin, aka midpoint, of room area
 	var room_origin = area_collision.global_position
+	# Dimensions of the room area [width,height]
 	var room_size = area_collision.shape.size
 	
-	# Limits
+	# - Limits -
 	CAMERA.limit_left = room_origin.x - room_size.x/2
 	CAMERA.limit_top = room_origin.y - room_size.y/2
 	CAMERA.limit_right = room_origin.x + room_size.x/2
 	CAMERA.limit_bottom = room_origin.y + room_size.y/2
 	
-	# Zoom
+	# - Zoom -
+	# Dimensions of the viewport
 	var VIEWPORT_RECT = get_viewport_rect()
+	# How far to zoom in
+	## Viewport y-axis divided by room height
 	var zoom_aspect = VIEWPORT_RECT.size.y / room_size.y
+	# Apply zoom
 	CAMERA.zoom = Vector2(zoom_aspect,zoom_aspect)
 
 func roomOverlay(room): 
-	var current_texture_grounds : Node2D = room.get_node("Texture Grounds")
-	for i : Node2D in TEXTURE_GROUNDS_BANK:
-		if i == current_texture_grounds:
+	for i : Node2D in ROOM_BANK:
+		if i == room:
 			i.visible = true
 		else:
 			i.visible = false

@@ -2,7 +2,8 @@ extends CharacterBody2D
 
 # --- VARIABLES ---
 
-
+# Player Body
+@onready var PLAYER_BODY = $"."
 
 # 
 var form_list = ['Pieface', 'Mocha', 'Cotton']
@@ -10,6 +11,8 @@ var player_form = form_list[1]
 
 
 # -- SPRITES --
+## Animation player for form sprites
+@onready var ANIMATE = $"Body Sprites/AnimationPlayer"
 ## Individual forms' sprites
 @onready var COTTON_SPRITE = $"Body Sprites/Cotton Sprite"
 @onready var MOCHA_SPRITE = $"Body Sprites/Mocha Sprite"
@@ -43,11 +46,10 @@ func _physics_process(delta):
 	
 	shape()
 	
-	#animate()
-	
 	# Base physics
 	move_and_slide()
 	
+	steady()
 	walk()
 	jump()
 	crawl()
@@ -154,54 +156,15 @@ func shape():
 	else:
 		pass
 
-# --- ANIMATION ---
-##
-@onready var ANIMATE = $"Body Sprites/AnimationPlayer"
-##
-var animation_queue : Array
-func animate():
-	# Removes animations
-	## X-Axis movement input
-	if Input.get_axis('LEFT','RIGHT') == 0:
-		animation_queue.erase('walk')
-		if animation_queue.has('crawl'):
-			ANIMATE.pause()
-	## Steady
-	### Overlap walk
-	if animation_queue.has('reach') and animation_queue.has('walk'):
-		animation_queue.erase('walk')
-	### Remove if no input
-	if not Input.is_action_just_pressed('UP'):
-		animation_queue.erase('reach')
-	## If not on floor
-	if not is_on_floor():
-		animation_queue.erase('walk')
-		animation_queue.erase('reach')
-		animation_queue.erase('crawl')
-	## Jump and Fall
-	if velocity.y > 0:
-		animation_queue.erase('jump')
-	else:
-		animation_queue.erase('fall')
-	
-	if not animation_queue.is_empty():
-		ANIMATE.play(animation_queue[0])
-	else:
-		ANIMATE.play('idle')
-
-
 # --- MOVEMENT ---
 
 # -- steady --
-var is_steadying : bool
 func steady():
 	if Input.is_action_pressed('UP'):
-		is_steadying = true
-	else:
-		is_steadying = false
-	
-	if is_steadying:
 		ANIMATE.play('reach')
+		set_collision_mask_value(3,true)
+	else:
+		set_collision_mask_value(3,false)
 
 
 # -- WALK --
