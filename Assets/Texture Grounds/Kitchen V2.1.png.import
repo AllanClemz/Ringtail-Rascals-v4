@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dstic8ge377pe"
-path="res://.godot/imported/Trash Can V1.1.png-0445b4e26db9dd04b53867d896eb83d2.ctex"
+uid="uid://bh5mtwfybrs54"
+path="res://.godot/imported/Kitchen V2.1.png-8b8dd483c879ebb9703abebbdcd787e0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Tilesets/Trash Can V1.1.png"
-dest_files=["res://.godot/imported/Trash Can V1.1.png-0445b4e26db9dd04b53867d896eb83d2.ctex"]
+source_file="res://Assets/Texture Grounds/Kitchen V2.1.png"
+dest_files=["res://.godot/imported/Kitchen V2.1.png-8b8dd483c879ebb9703abebbdcd787e0.ctex"]
 
 [params]
 

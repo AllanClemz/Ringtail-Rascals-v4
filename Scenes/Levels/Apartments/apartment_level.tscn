@@ -24,5 +24,5 @@ position = Vector2(208, -112)
 [node name="Alley Room" parent="." unique_id=671426161 instance=ExtResource("6_sur2p")]
 position = Vector2(448, 96)
 
-[node name="Nook Room" parent="Alley Room" unique_id=378606051 instance=ExtResource("4_hn071")]
-position = Vector2(-80, 16)
+[node name="Nook Room" parent="." unique_id=378606051 instance=ExtResource("4_hn071")]
+position = Vector2(368, 112)

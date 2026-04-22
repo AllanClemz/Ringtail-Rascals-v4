@@ -56,6 +56,7 @@ func _physics_process(delta):
 	jump()
 	crawl()
 	climb()
+	grab()
 	
 	gravity(delta)
 
@@ -91,7 +92,7 @@ func formAttributes():
 		form_collision_measure = COTTON_COLLISION_MEASURE
 		#
 		speed = 3
-		jump_force = [2,2]
+		jump_force = [2,2.5]
 		weight = 5
 	
 	# Sprite visibility
@@ -166,12 +167,12 @@ func steady():
 		# Add steady mask value
 		set_collision_mask_value(3,true)
 		# Set to steady z-index
-		z_index = -6
+		z_index = 0
 	else:
 		# Remove steady mask value
 		set_collision_mask_value(3,false)
 		# Set to default z-index
-		z_index = 0
+		z_index = 3
 
 
 # -- WALK --
@@ -210,7 +211,7 @@ func jump():
 	# Perform jump on press
 	if Input.is_action_just_pressed("JUMP") and can_jump:
 		ANIMATE.play('jump')
-		velocity.y = jump_force[1]*-125
+		velocity.y = jump_force[1]*-100
 	
 	# Jump move
 	if velocity.y < 0:
@@ -269,6 +270,8 @@ func climb():
 		if i is ladder:
 			ladder_body = i
 			is_on_ladder = ladder_body.player_on_ladder
+			if is_on_ladder:
+				print('ye')
 	
 	if Input.is_action_pressed('UP') and CLIMB_CHECK.has_overlapping_bodies() and can_climb:
 		is_climbing = true
@@ -281,6 +284,28 @@ func climb():
 		ANIMATE.play('climb flat')
 		velocity.y = -50
 		velocity.x = 5 * direction
+
+
+# -- GRAB --
+## Range of grab
+@onready var GRAB_RANGE : Area2D = $"Area Checks/Grab Range"
+
+##
+var can_grab : bool
+## If player is grabbing an obejct
+var is_grabbing : bool
+## The object being grabbed
+var grabbed_object : RigidBody2D
+func grab():
+	
+	if can_grab:
+		pass
+	
+	for i in GRAB_RANGE.get_overlapping_bodies():
+		if i is RigidBody2D:
+			pass
+
+
 
 
 # --- MISC ---

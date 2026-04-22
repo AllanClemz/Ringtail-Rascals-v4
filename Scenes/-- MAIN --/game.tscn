@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dal75rq3thlwe"]
 
 [ext_resource type="PackedScene" uid="uid://c302h81dwv7p5" path="res://Scenes/Levels/Apartments/apartment_level.tscn" id="1_54s35"]
-[ext_resource type="Script" uid="uid://d0m3s0ox3012a" path="res://Scripts/game.gd" id="1_kt108"]
+[ext_resource type="Script" uid="uid://d0m3s0ox3012a" path="res://Scripts/-- MAIN --/game.gd" id="1_kt108"]
 [ext_resource type="PackedScene" uid="uid://di8btiu0ivj2e" path="res://Scenes/player_body.tscn" id="2_rumbs"]
 
 [node name="Game" type="Node2D" unique_id=1936281751]
@@ -10,4 +10,4 @@ script = ExtResource("1_kt108")
 [node name="Apartment Level" parent="." unique_id=341631712 instance=ExtResource("1_54s35")]
 
 [node name="Player Body" parent="." unique_id=552994776 instance=ExtResource("2_rumbs")]
-position = Vector2(336, 96)
+position = Vector2(576, 80)

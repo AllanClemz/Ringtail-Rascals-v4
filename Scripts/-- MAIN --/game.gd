@@ -41,7 +41,6 @@ func detect():
 				swap_queue.append(i)
 		else:
 			swap_queue.erase(i)
-		
 	# Call functions
 	var current = swap_queue[0]
 	camera(current)
@@ -66,8 +65,18 @@ func camera(area):
 	# Dimensions of the viewport
 	var VIEWPORT_RECT = get_viewport_rect()
 	# How far to zoom in
-	## Viewport y-axis divided by room height
-	var zoom_aspect = VIEWPORT_RECT.size.y / room_size.y
+	var zoom_aspect : float
+	
+	# Zoom proportions
+	var zoom_by_y = VIEWPORT_RECT.size.y / room_size.y
+	var zoom_by_x = VIEWPORT_RECT.size.x / room_size.x
+	# If wide, zoom by x
+	if zoom_by_y < zoom_by_x:
+		zoom_aspect = zoom_by_x
+	# If tall, zoom by y
+	else:
+		zoom_aspect = zoom_by_y
+	
 	# Apply zoom
 	CAMERA.zoom = Vector2(zoom_aspect,zoom_aspect)
 

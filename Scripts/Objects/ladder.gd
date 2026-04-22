@@ -8,4 +8,6 @@ var player_on_ladder
 func _process(_delta):
 	for i in LADDER_CHECK.get_overlapping_bodies():
 		if i is player_body:
-			player_on_ladder = true
+			if Input.is_action_pressed('UP'):
+				i.velocity.y = -50
+				i.ANIMATE.play('climb flat')

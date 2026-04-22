@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://be1srvyy42ckw"]
 
-[ext_resource type="Script" uid="uid://j2wiue4ykdvj" path="res://Scripts/ladder.gd" id="2_2g1wp"]
+[ext_resource type="Script" uid="uid://j2wiue4ykdvj" path="res://Scripts/Objects/ladder.gd" id="2_2g1wp"]
 [ext_resource type="Texture2D" uid="uid://d2e68qrcleqtk" path="res://Assets/Tilesets/Ladders TileSet V1.png" id="2_6713q"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2g1wp"]
