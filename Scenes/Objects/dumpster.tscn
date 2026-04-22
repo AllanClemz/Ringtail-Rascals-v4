@@ -1,74 +1,59 @@
 [gd_scene format=3 uid="uid://drh62ngkglu4q"]
 
-[ext_resource type="Texture2D" uid="uid://dstic8ge377pe" path="res://Assets/Tilesets/Trash Can V1.1.png" id="1_mg2r5"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_7ygca"]
-atlas = ExtResource("1_mg2r5")
-region = Rect2(80, 80, 80, 80)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_b7fyy"]
-atlas = ExtResource("1_mg2r5")
-region = Rect2(0, 160, 80, 80)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_155vw"]
-atlas = ExtResource("1_mg2r5")
-region = Rect2(0, 0, 80, 80)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_0uouk"]
-atlas = ExtResource("1_mg2r5")
-region = Rect2(80, 0, 80, 80)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_7rtoy"]
-atlas = ExtResource("1_mg2r5")
-region = Rect2(0, 80, 80, 80)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_jgue4"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_7ygca")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_b7fyy")
-}],
-"loop": false,
-"name": &"disrupt",
-"speed": 4.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_155vw")
-}],
-"loop": true,
-"name": &"idle",
-"speed": 0.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_0uouk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_7rtoy")
-}],
-"loop": true,
-"name": &"move",
-"speed": 4.0
-}]
+[ext_resource type="Script" uid="uid://cfac887m4iloo" path="res://Scripts/Objects/dumpster.gd" id="1_7ygca"]
+[ext_resource type="Texture2D" uid="uid://r8n5rad57pce" path="res://Assets/Tilesets/Dumpster v1.2B.png" id="1_mg2r5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mg2r5"]
-size = Vector2(49, 36)
+size = Vector2(19, 19)
 
 [node name="Dumpster" type="RigidBody2D" unique_id=1423038216]
+collision_layer = 3
 lock_rotation = true
+script = ExtResource("1_7ygca")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1840349466]
+[node name="Sprites" type="Node2D" parent="." unique_id=497056862]
+position = Vector2(-0.29999924, -39.3)
+
+[node name="Lid" type="Sprite2D" parent="Sprites" unique_id=1887367322]
+z_index = -5
+position = Vector2(-5, -16)
+texture = ExtResource("1_mg2r5")
+centered = false
+region_enabled = true
+region_rect = Rect2(11, 13, 30, 24)
+
+[node name="Trash Cove" type="Sprite2D" parent="Sprites" unique_id=361691125]
+z_index = 5
+position = Vector2(0, 3)
+texture = ExtResource("1_mg2r5")
+centered = false
+region_enabled = true
+region_rect = Rect2(96, 32, 23, 22)
+
+[node name="Body" type="Sprite2D" parent="Sprites" unique_id=945993848]
 z_index = 4
-position = Vector2(0, -28)
-sprite_frames = SubResource("SpriteFrames_jgue4")
-animation = &"idle"
-autoplay = "idle"
+texture = ExtResource("1_mg2r5")
+centered = false
+region_enabled = true
+region_rect = Rect2(176, 29, 49, 35)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=658659211]
+[node name="Wheels" type="Sprite2D" parent="Sprites" unique_id=740319098]
+z_index = -5
+position = Vector2(24, 37)
+texture = ExtResource("1_mg2r5")
+region_enabled = true
+region_rect = Rect2(17, 144, 46, 4)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=754937428]
 visible = false
-position = Vector2(0.5, -18)
+position = Vector2(23.7, -0.29999924)
+polygon = PackedVector2Array(25, 0, -24, 0, -24, -36, -23, -36, -23, -13, -1, -13, -1, -36, 1, -39, 25, -39)
+
+[node name="Trash Area" type="Area2D" parent="." unique_id=1753585874]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Trash Area" unique_id=682924789]
+position = Vector2(12.5, -23.5)
 shape = SubResource("RectangleShape2D_mg2r5")
+
+[connection signal="body_entered" from="Trash Area" to="." method="_on_trash_area_body_entered"]

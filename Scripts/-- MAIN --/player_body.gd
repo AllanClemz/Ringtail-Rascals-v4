@@ -5,11 +5,11 @@ class_name player_body
 # --- VARIABLES ---
 
 # Player Body
-@onready var PLAYER_BODY = $"."
+@onready var PLAYER_BODY : CharacterBody2D = $"."
 
 # 
-var form_list = ['Pieface', 'Mocha', 'Cotton']
-var player_form = form_list[1]
+var FORM_LIST : Array = ['Pieface', 'Mocha', 'Cotton']
+var player_form : String = FORM_LIST[1]
 
 
 # -- SPRITES --
@@ -44,7 +44,6 @@ var weight : float
 ## 
 func _physics_process(delta):
 	formAttributes()
-	formSwap()
 	
 	shape()
 	
@@ -117,13 +116,24 @@ func formAttributes():
 
 # --- FORM SWAP ---
 func formSwap():
+	# Current form
+	var current_form = FORM_LIST.find(player_form)
+	# Next form in array to swap to
+	var next_form = FORM_LIST[current_form + 1]
+	# Input to swap
 	if Input.is_action_just_pressed("INTERACT"):
-		if player_form == 'Pieface':
-			player_form = 'Mocha'
-		elif player_form == 'Mocha':
-			player_form = 'Cotton'
-		elif player_form == 'Cotton':
-			player_form = 'Pieface'
+		player_form = next_form
+		velocity.y = -250
+	
+	
+	#if Input.is_action_pressed("INTERACT"):
+		#for form in FORM_LIST:
+			#if form == player_form:
+				#next_form = true
+			#else:
+				#if next_form == true:
+					#player_form = form
+		#velocity.y = -250
 
 
 # --- SHAPE ---
