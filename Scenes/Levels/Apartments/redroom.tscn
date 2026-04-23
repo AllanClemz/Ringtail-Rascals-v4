@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://cu3bt3bl0pvpn" path="res://Scenes/-- MAIN --/collision_tilemap.tscn" id="1_kbw0k"]
 [ext_resource type="Texture2D" uid="uid://b1x8pdg1uufvy" path="res://Assets/Texture Grounds/RedRoom V2.png" id="2_kbw0k"]
 [ext_resource type="PackedScene" uid="uid://qayf2yxaapa5" path="res://Scenes/Objects/door.tscn" id="3_5n80b"]
+[ext_resource type="PackedScene" uid="uid://crrychvg7vnek" path="res://Scenes/Objects/box.tscn" id="4_2x0wv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kbw0k"]
 size = Vector2(256, 128)
@@ -31,3 +32,15 @@ texture = ExtResource("2_kbw0k")
 [node name="Door to Room" parent="." unique_id=1890197926 instance=ExtResource("3_5n80b")]
 position = Vector2(0, 112)
 metadata/is_facing_left = true
+
+[node name="Box" parent="." unique_id=1759980651 instance=ExtResource("4_2x0wv")]
+position = Vector2(190, 108)
+
+[node name="Box2" parent="." unique_id=1336923110 instance=ExtResource("4_2x0wv")]
+position = Vector2(91, 107)
+
+[node name="Box3" parent="." unique_id=572618232 instance=ExtResource("4_2x0wv")]
+position = Vector2(42, 108)
+
+[node name="Box4" parent="." unique_id=377694909 instance=ExtResource("4_2x0wv")]
+position = Vector2(69, 108)

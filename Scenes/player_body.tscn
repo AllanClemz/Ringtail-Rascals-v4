@@ -957,18 +957,18 @@ animation = &"idle"
 autoplay = "idle"
 
 [node name="Body Collision" type="CollisionShape2D" parent="." unique_id=103570056]
+visible = false
 position = Vector2(0, -5)
 rotation = -1.5707964
 shape = SubResource("CapsuleShape2D_5xga4")
 
 [node name="Area Checks" type="Node2D" parent="." unique_id=1194827986]
-visible = false
 
 [node name="Crawl Checks" type="Node2D" parent="Area Checks" unique_id=1921691214]
 
 [node name="Crawl Upper-Check" type="Area2D" parent="Area Checks/Crawl Checks" unique_id=1783337239]
 collision_layer = 0
-collision_mask = 2
+collision_priority = 5.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area Checks/Crawl Checks/Crawl Upper-Check" unique_id=1547835849]
 position = Vector2(3, -7)
@@ -976,7 +976,6 @@ shape = SubResource("RectangleShape2D_5xga4")
 
 [node name="Crawl Lower-Check" type="Area2D" parent="Area Checks/Crawl Checks" unique_id=457736403]
 collision_layer = 0
-collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area Checks/Crawl Checks/Crawl Lower-Check" unique_id=1866514534]
 position = Vector2(3, -1)

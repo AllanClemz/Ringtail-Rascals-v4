@@ -22,7 +22,7 @@ tile_map_data = PackedByteArray("AAAAAP//AAAAAAAAAAABAP//AAAAAAAAAAACAP//AAAAAAA
 [node name="Texture Grounds" type="Node2D" parent="." unique_id=1527668896]
 
 [node name="Dumpster" parent="." unique_id=1423038216 instance=ExtResource("2_juae2")]
-position = Vector2(208, -16)
+position = Vector2(203, -51)
 collision_mask = 5
 freeze = true
 
@@ -36,3 +36,6 @@ position = Vector2(0, 16)
 
 [node name="Ladder3" parent="Ladder" unique_id=1601543042 instance=ExtResource("3_humt6")]
 position = Vector2(0, 32)
+
+[node name="Ladder4" parent="Ladder" unique_id=922451251 instance=ExtResource("3_humt6")]
+position = Vector2(0, 48)

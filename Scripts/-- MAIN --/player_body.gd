@@ -90,7 +90,7 @@ func formAttributes():
 		form_sprite = COTTON_SPRITE
 		form_collision_measure = COTTON_COLLISION_MEASURE
 		#
-		speed = 3
+		speed = 4
 		jump_force = [2,2.5]
 		weight = 5
 	
@@ -115,30 +115,23 @@ func formAttributes():
 
 
 # --- FORM SWAP ---
+## Triggered externally by trash heaps
 func formSwap():
 	# Current form
 	var current_form = FORM_LIST.find(player_form)
+	# Loop array neatly
+	if current_form + 1 == 3:
+		current_form = -1
 	# Next form in array to swap to
 	var next_form = FORM_LIST[current_form + 1]
-	# Input to swap
-	if Input.is_action_just_pressed("INTERACT"):
-		player_form = next_form
-		velocity.y = -250
-	
-	
-	#if Input.is_action_pressed("INTERACT"):
-		#for form in FORM_LIST:
-			#if form == player_form:
-				#next_form = true
-			#else:
-				#if next_form == true:
-					#player_form = form
-		#velocity.y = -250
+	# Swap form
+	player_form = next_form
+	# Propel player up
 
 
 # --- SHAPE ---
 ## List of every area check
-@onready var AREA_CHECK_LIST = [$"Area Checks/Crawl Checks/Crawl Upper-Check", $"Area Checks/Crawl Checks/Crawl Lower-Check", $"Area Checks/Climb Check"]
+@onready var AREA_CHECK = $"Area Checks"
 ## Alter the shape of collisions
 func shape():
 	# Direction vairable
@@ -156,7 +149,7 @@ func shape():
 	# - Area checks -
 	# Flip area check collisions
 	if direction != 0:
-		for i in AREA_CHECK_LIST:
+		for i in AREA_CHECK.get_children():
 			var area_child = i.get_child(0)
 			area_child.position.x = abs(area_child.position.x) * direction
 	
@@ -242,11 +235,28 @@ func crawl():
 	else:
 		can_crawl = true
 	
-	# 
-	if CRAWL_UPPER_CHECK.has_overlapping_bodies() and not CRAWL_LOWER_CHECK.has_overlapping_bodies() and can_crawl:
+	
+	# Check for tilemaplayer collisions
+	var upper_check : bool = false
+	for body in CRAWL_UPPER_CHECK.get_overlapping_bodies():
+		if body is TileMapLayer:
+			upper_check = true
+	var lower_check : bool = false
+	for body in CRAWL_LOWER_CHECK.get_overlapping_bodies():
+		if body is TileMapLayer:
+			lower_check = true
+	# If need crawl to enter and space for crawl, then crawl
+	if upper_check and not lower_check:
 		is_crawling = true
 	else:
 		is_crawling = false
+	
+	
+	#
+	#if CRAWL_UPPER_CHECK.has_overlapping_bodies() and not CRAWL_LOWER_CHECK.has_overlapping_bodies() and can_crawl:
+		#is_crawling = true
+	#else:
+		#is_crawling = false
 	
 	# 
 	if is_crawling:
@@ -262,31 +272,22 @@ var is_climbing : bool
 func climb():
 	var can_climb : bool
 	# Determine if can climb
-	## If Cotton, cannot climb
-	if player_form == 'Cotton':
-		can_climb = false
 	## Cannot climb from crawl
-	elif is_crawling:
+	if is_crawling:
 		can_climb = false
 	else:
 		can_climb = true
 	
 	var direction = Input.get_axis('LEFT','RIGHT')
-	
-	# Detect ladder
-	var ladder_body
-	var is_on_ladder
-	for i in CLIMB_CHECK.get_overlapping_bodies():
-		if i is ladder:
-			ladder_body = i
-			is_on_ladder = ladder_body.player_on_ladder
-			if is_on_ladder:
-				print('ye')
-	
+	#
 	if Input.is_action_pressed('UP') and CLIMB_CHECK.has_overlapping_bodies() and can_climb:
-		is_climbing = true
-	elif is_on_ladder:
-		is_climbing = true
+		# If form is Cotton, check if climbable is ladder
+		if player_form == 'Cotton':
+			for x in CLIMB_CHECK.get_overlapping_bodies():
+				if x.has_meta('ladder'):
+					is_climbing = true
+		else: 
+			is_climbing = true
 	else:
 		is_climbing = false
 	
@@ -300,21 +301,55 @@ func climb():
 ## Range of grab
 @onready var GRAB_RANGE : Area2D = $"Area Checks/Grab Range"
 
-##
+## If able to grab
 var can_grab : bool
 ## If player is grabbing an obejct
 var is_grabbing : bool
 ## The object being grabbed
 var grabbed_object : RigidBody2D
 func grab():
+	# If can grab
+	## Crawling
+	if is_crawling:
+		can_grab = false
+	else:
+		can_grab = true
 	
-	if can_grab:
-		pass
+	# Carry
+	if grabbed_object != null:
+		# Restrict object's individual movement
+		## Freeze
+		grabbed_object.freeze = true
+		## Remove collision
+		grabbed_object.set_collision_layer_value(1,false)
+		# Move object to above player
+		grabbed_object.global_position.x = position.x
+		grabbed_object.global_position.y = position.y - 20
+		
+		# - Drop -
+		var force_drop : bool
+		# Input to drop
+		if Input.is_action_just_pressed('INTERACT') or force_drop:
+			var direction = Input.get_axis('LEFT','RIGHT')
+			grabbed_object.global_position.x = position.x + (20 * direction)
+			grabbed_object.global_position.y = position.y
+			# Undo restrictions to object
+			grabbed_object.freeze = false
+			grabbed_object.set_collision_layer_value(1,true)
+			# Remove object from grab
+			grabbed_object = null
 	
+	# Check all nodes in grab range
 	for i in GRAB_RANGE.get_overlapping_bodies():
-		if i is RigidBody2D:
-			pass
-
+		# If is grabbable object and can grab
+		if i is RigidBody2D and not is_grabbing and can_grab:
+			var is_grabbable : bool = false
+			# If can grab, based on object attributes
+			if weight >= i.get_meta('weight'):
+				is_grabbable = true
+			# Input to grab
+			if Input.is_action_just_pressed("INTERACT") and is_grabbable:
+				grabbed_object = i
 
 
 
