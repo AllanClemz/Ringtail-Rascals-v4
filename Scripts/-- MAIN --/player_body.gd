@@ -145,7 +145,6 @@ func shape():
 		elif direction >0:
 			i.flip_h = false
 	
-	
 	# - Area checks -
 	# Flip area check collisions
 	if direction != 0:
@@ -165,13 +164,26 @@ func shape():
 # --- MOVEMENT ---
 
 # -- steady --
+# If steadying
+var is_steadying : bool
 func steady():
-	if Input.is_action_pressed('UP'):
+	# If can steady
+	var can_steady : bool
+	if is_crawling:
+		can_steady = false
+	elif is_climbing:
+		can_steady = false
+	else:
+		can_steady = true
+	
+	if can_steady and Input.is_action_pressed('UP'):
+		is_steadying = true
 		# Add steady mask value
 		set_collision_mask_value(3,true)
 		# Set to steady z-index
 		z_index = 0
 	else:
+		is_steadying = false
 		# Remove steady mask value
 		set_collision_mask_value(3,false)
 		# Set to default z-index
@@ -180,14 +192,15 @@ func steady():
 
 # -- WALK --
 func walk():
-	
 	var direction = Input.get_axis('LEFT','RIGHT')
 	#
 	if direction != 0 and is_on_floor():
-		if Input.is_action_pressed('UP'):
+		# Check if steadying
+		if is_steadying:
 			ANIMATE.play('reach')
 		else:
 			ANIMATE.play('walk')
+		# Move
 		velocity.x = speed*15 * direction
 	# If no direction and is on floor, stop x-velocity.
 	elif is_on_floor():
@@ -207,7 +220,10 @@ func jump():
 	## Cannot jump if off floor
 	if not is_on_floor():
 		can_jump = false
-	## Can jump
+	elif is_crawling:
+		can_jump = false
+	elif is_climbing:
+		can_jump = false
 	else:
 		can_jump = true
 	
@@ -235,7 +251,6 @@ func crawl():
 	else:
 		can_crawl = true
 	
-	
 	# Check for tilemaplayer collisions
 	var upper_check : bool = false
 	for body in CRAWL_UPPER_CHECK.get_overlapping_bodies():
@@ -245,8 +260,9 @@ func crawl():
 	for body in CRAWL_LOWER_CHECK.get_overlapping_bodies():
 		if body is TileMapLayer:
 			lower_check = true
+	
 	# If need crawl to enter and space for crawl, then crawl
-	if upper_check and not lower_check:
+	if upper_check and not lower_check and can_crawl:
 		is_crawling = true
 	else:
 		is_crawling = false

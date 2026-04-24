@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://drh62ngkglu4q"]
 
 [ext_resource type="Texture2D" uid="uid://bbecbhid3c42w" path="res://Assets/Tilesets/Dumpster V2.png" id="1_b7fyy"]
-[ext_resource type="PackedScene" uid="uid://dw0hohfwbqoui" path="res://Scenes/Objects/trash_area.tscn" id="2_7ygca"]
+[ext_resource type="PackedScene" uid="uid://dw0hohfwbqoui" path="res://Scenes/Misc/trash_area.tscn" id="2_7ygca"]
 [ext_resource type="PackedScene" uid="uid://be1srvyy42ckw" path="res://Scenes/Objects/ladder.tscn" id="3_b7fyy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_b7fyy"]

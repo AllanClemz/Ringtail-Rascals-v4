@@ -963,6 +963,7 @@ rotation = -1.5707964
 shape = SubResource("CapsuleShape2D_5xga4")
 
 [node name="Area Checks" type="Node2D" parent="." unique_id=1194827986]
+visible = false
 
 [node name="Crawl Checks" type="Node2D" parent="Area Checks" unique_id=1921691214]
 

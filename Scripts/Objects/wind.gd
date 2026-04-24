@@ -6,18 +6,22 @@ class_name wind
 @onready var AREA = $Area2D
 
 func _process(_delta):
-	# Find wind direction
-	var dir_x = $"Sprite End".global_position.x - $"Sprite Body".global_position.x
-	var dir_y = $"Sprite End".global_position.y - $"Sprite Body".global_position.y
+	# Find wind direction; polarity of axes
+	var SPRITE_END : AnimatedSprite2D = $"Sprite End"
+	var SPRITE_BODY : AnimatedSprite2D = $"Sprite Body"
+	## X-axis
+	var dir_x = sign(abs(round(SPRITE_END.global_position.x)) - abs(round(SPRITE_BODY.global_position.x)))
+	## Y-axis
+	var dir_y = sign(abs(SPRITE_END.global_position.y) - abs(SPRITE_BODY.global_position.y))
+	## Vector of x and y
 	var DIRECTION : Vector2 = Vector2(dir_x,dir_y)
+	
 	
 	for body in AREA.get_overlapping_bodies():
 		if body is RigidBody2D or body is CharacterBody2D:
 			# Check for attributes
 			## Weight. Default of 1
-			var weight : float = 1
-			## If on floor. Default of false
-			var is_on_floor : bool = false
+			var weight : float = 5
 			## Player
 			if body is player_body:
 				weight = body.weight
@@ -25,14 +29,14 @@ func _process(_delta):
 			elif body.has_meta('weight'):
 				weight = body.get_meta('weight')
 			
-			# Force of wind's pushing
-			var lessen_force : int = 1
-			if is_on_floor:
-				lessen_force = 3
+			# - PUSH -
+			## Max force of push for object
+			var MAX_PUSH : Vector2 = DIRECTION * 300 / weight 
 			
 			if body is player_body:
-				body.velocity.x += DIRECTION.x / (weight * lessen_force)
-				body.velocity.y += DIRECTION.y / (weight * lessen_force)
-			elif body is RigidBody2D:
-				body.linear_velocity.x += DIRECTION.x / (weight * lessen_force)
-				body.linear_velocity.y += DIRECTION.y / (weight * lessen_force)
+				if abs(body.velocity) < MAX_PUSH:
+					body.velocity.x += 230 / weight * DIRECTION.x
+					body.velocity.y += -100 / weight * DIRECTION.y
+			else:
+				body.linear_velocity.x = 230 / weight * DIRECTION.x
+				body.linear_velocity.y = -100 / weight * DIRECTION.y

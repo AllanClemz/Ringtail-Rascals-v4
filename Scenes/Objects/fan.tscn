@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ba0epbsq4sam6"]
 
 [ext_resource type="Texture2D" uid="uid://dicvphwj3vfd" path="res://Assets/Tilesets/Fan TileSet V1.png" id="1_i34ox"]
-[ext_resource type="PackedScene" uid="uid://bfjthddraa45d" path="res://Scenes/Objects/wind.tscn" id="2_ktej0"]
+[ext_resource type="PackedScene" uid="uid://bfjthddraa45d" path="res://Scenes/Misc/wind.tscn" id="2_ktej0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ktej0"]
 atlas = ExtResource("1_i34ox")
