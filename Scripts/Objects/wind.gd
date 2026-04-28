@@ -31,12 +31,16 @@ func _process(_delta):
 			
 			# - PUSH -
 			## Max force of push for object
-			var MAX_PUSH : Vector2 = DIRECTION * 300 / weight 
+			var MAX_PUSH : Vector2 = DIRECTION * 300 / weight
 			
 			if body is player_body:
 				if abs(body.velocity) < MAX_PUSH:
-					body.velocity.x += 230 / weight * DIRECTION.x
-					body.velocity.y += -100 / weight * DIRECTION.y
+					body.velocity.x += 200 / weight * DIRECTION.x
+					body.velocity.y += -150 / weight * DIRECTION.y
+					# Play fall when pushed and not on floor
+					if not body.is_on_floor():
+						body.ANIMATE.play('fall')
+			# Linear velocity for rigidbodies
 			else:
 				body.linear_velocity.x = 230 / weight * DIRECTION.x
 				body.linear_velocity.y = -100 / weight * DIRECTION.y

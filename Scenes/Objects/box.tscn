@@ -7,6 +7,7 @@ size = Vector2(8, 8)
 
 [node name="Box" type="RigidBody2D" unique_id=1759980651]
 collision_layer = 3
+can_sleep = false
 lock_rotation = true
 metadata/weight = 0.5
 

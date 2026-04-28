@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b72p10mxkg4cl"
-path="res://.godot/imported/Green Room v2.2.png-80f75b58a279d5e0b74bd9125adda42f.ctex"
+uid="uid://dxw2wh67txlr"
+path="res://.godot/imported/Kitchen V2.3.png-116e74eaf3513101e7a6b2e23331bac2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Texture Grounds/Green Room v2.2.png"
-dest_files=["res://.godot/imported/Green Room v2.2.png-80f75b58a279d5e0b74bd9125adda42f.ctex"]
+source_file="res://Assets/Texture Grounds/Kitchen V2.3.png"
+dest_files=["res://.godot/imported/Kitchen V2.3.png-116e74eaf3513101e7a6b2e23331bac2.ctex"]
 
 [params]
 

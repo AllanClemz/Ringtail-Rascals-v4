@@ -11,7 +11,6 @@ class_name player_body
 var FORM_LIST : Array = ['Pieface', 'Mocha', 'Cotton']
 var player_form : String = FORM_LIST[1]
 
-
 # -- SPRITES --
 ## Animation player for form sprites
 @onready var ANIMATE = $"Body Sprites/AnimationPlayer"
@@ -41,8 +40,15 @@ var jump_force : Array
 var weight : float
 
 # --- PHYSICS LOOP ---
-## 
+# Direction of input movement
+var direction : float
+## Direction player is facing, default of 1.
+var facing_direction : float = 1
 func _physics_process(delta):
+	direction = Input.get_axis('LEFT','RIGHT')
+	if direction != 0:
+		facing_direction = direction
+	
 	formAttributes()
 	
 	shape()
@@ -62,7 +68,7 @@ func _physics_process(delta):
 
 
 # --- FORM ATTRIBUTES ---
-## Current form's sprite
+# Current form's sprite
 var form_sprite : AnimatedSprite2D
 func formAttributes():
 	# - Forms' Attributes -
@@ -73,7 +79,7 @@ func formAttributes():
 		form_collision_measure = PIEFACE_COLLISION_MEASURE
 		#
 		speed = 8
-		jump_force = [3,1]
+		jump_force = [3,1.1]
 		weight = 1
 	
 	## MOCHA
@@ -83,7 +89,7 @@ func formAttributes():
 		#
 		speed = 5
 		jump_force = [1,3]
-		weight = 3
+		weight = 2
 		
 	## COTTON
 	elif player_form =='Cotton':
@@ -92,7 +98,7 @@ func formAttributes():
 		#
 		speed = 4
 		jump_force = [2,2.5]
-		weight = 5
+		weight = 4
 	
 	# Sprite visibility
 	for i in PLAYER_SPRITES:
@@ -115,7 +121,7 @@ func formAttributes():
 
 
 # --- FORM SWAP ---
-## Triggered externally by trash heaps
+# Triggered externally by trash heaps
 func formSwap():
 	# Current form
 	var current_form = FORM_LIST.find(player_form)
@@ -130,19 +136,16 @@ func formSwap():
 
 
 # --- SHAPE ---
-## List of every area check
+# List of every area check
 @onready var AREA_CHECK = $"Area Checks"
-## Alter the shape of collisions
+# Alter the shape of collisions
 func shape():
-	# Direction vairable
-	var direction = Input.get_axis('LEFT','RIGHT')
-	
 	# - Turn sprites -
 	## Flip all sprites based on input direction.
 	for i in PLAYER_SPRITES:
-		if direction <0:
+		if direction < 0:
 			i.flip_h = true
-		elif direction >0:
+		elif direction > 0:
 			i.flip_h = false
 	
 	# - Area checks -
@@ -192,7 +195,6 @@ func steady():
 
 # -- WALK --
 func walk():
-	var direction = Input.get_axis('LEFT','RIGHT')
 	#
 	if direction != 0 and is_on_floor():
 		# Check if steadying
@@ -214,7 +216,6 @@ func walk():
 
 # -- JUMP --
 func jump():
-	var direction = Input.get_axis('LEFT','RIGHT')
 	# Determine if can jump
 	var can_jump : bool
 	## Cannot jump if off floor
@@ -230,7 +231,7 @@ func jump():
 	# Perform jump on press
 	if Input.is_action_just_pressed("JUMP") and can_jump:
 		ANIMATE.play('jump')
-		velocity.y = jump_force[1]*-100
+		velocity.y = jump_force[1]*-90
 	
 	# Jump move
 	if velocity.y < 0:
@@ -267,13 +268,6 @@ func crawl():
 	else:
 		is_crawling = false
 	
-	
-	#
-	#if CRAWL_UPPER_CHECK.has_overlapping_bodies() and not CRAWL_LOWER_CHECK.has_overlapping_bodies() and can_crawl:
-		#is_crawling = true
-	#else:
-		#is_crawling = false
-	
 	# 
 	if is_crawling:
 		ANIMATE.play('crawl')
@@ -281,9 +275,9 @@ func crawl():
 
 
 # -- CLIMB --
-## Ladder func is in ladder object
+# Ladder func is in ladder object
 @onready var CLIMB_CHECK : Area2D = $"Area Checks/Climb Check"
-
+# If climbing
 var is_climbing : bool
 func climb():
 	var can_climb : bool
@@ -294,7 +288,6 @@ func climb():
 	else:
 		can_climb = true
 	
-	var direction = Input.get_axis('LEFT','RIGHT')
 	#
 	if Input.is_action_pressed('UP') and CLIMB_CHECK.has_overlapping_bodies() and can_climb:
 		# If form is Cotton, check if climbable is ladder
@@ -302,7 +295,7 @@ func climb():
 			for x in CLIMB_CHECK.get_overlapping_bodies():
 				if x.has_meta('ladder'):
 					is_climbing = true
-		else: 
+		else:
 			is_climbing = true
 	else:
 		is_climbing = false
@@ -314,58 +307,113 @@ func climb():
 
 
 # -- GRAB --
-## Range of grab
+# Range of grab
 @onready var GRAB_RANGE : Area2D = $"Area Checks/Grab Range"
-
-## If able to grab
-var can_grab : bool
-## If player is grabbing an obejct
-var is_grabbing : bool
-## The object being grabbed
+# The object being grabbed
 var grabbed_object : RigidBody2D
+## The object's collision
+var object_collision : CollisionShape2D
+# If player is grabbing an object
+var is_grabbing : bool
 func grab():
-	# If can grab
-	## Crawling
-	if is_crawling:
+	# - Able -
+	var can_grab : bool
+	# Individual actions
+	if is_grabbing or is_crawling or is_climbing:
 		can_grab = false
 	else:
 		can_grab = true
 	
-	# Carry
-	if grabbed_object != null:
-		# Restrict object's individual movement
-		## Freeze
-		grabbed_object.freeze = true
-		## Remove collision
-		grabbed_object.set_collision_layer_value(1,false)
-		# Move object to above player
-		grabbed_object.global_position.x = position.x
-		grabbed_object.global_position.y = position.y - 20
-		
+	# -- Interact --
+	if is_grabbing:
 		# - Drop -
-		var force_drop : bool
-		# Input to drop
-		if Input.is_action_just_pressed('INTERACT') or force_drop:
-			var direction = Input.get_axis('LEFT','RIGHT')
-			grabbed_object.global_position.x = position.x + (20 * direction)
-			grabbed_object.global_position.y = position.y
-			# Undo restrictions to object
-			grabbed_object.freeze = false
-			grabbed_object.set_collision_layer_value(1,true)
-			# Remove object from grab
-			grabbed_object = null
+		if Input.is_action_just_pressed('INTERACT'):
+			drop(grabbed_object)
+	# - Range -
+	else:
+		for i in GRAB_RANGE.get_overlapping_bodies():
+			# If is grabbable object and can grab
+			if i is RigidBody2D and can_grab:
+				## Input to grab
+				if Input.is_action_just_pressed("INTERACT"):
+					grabbed_object = i
+					is_grabbing = true
 	
-	# Check all nodes in grab range
-	for i in GRAB_RANGE.get_overlapping_bodies():
-		# If is grabbable object and can grab
-		if i is RigidBody2D and not is_grabbing and can_grab:
-			var is_grabbable : bool = false
-			# If can grab, based on object attributes
-			if weight >= i.get_meta('weight'):
-				is_grabbable = true
-			# Input to grab
-			if Input.is_action_just_pressed("INTERACT") and is_grabbable:
-				grabbed_object = i
+	# - Collision -
+	if is_grabbing:
+		for i in grabbed_object.get_children():
+			if i is CollisionShape2D or i is CollisionPolygon2D:
+				print('AGH')
+				object_collision = i
+	
+	
+	# - Type -
+	## The type of grab; 'carry' or 'drag'.
+	var grab_type : String
+	## Object weight
+	var object_weight : float
+	if is_grabbing:
+		object_weight = grabbed_object.get_meta('weight')
+		## If player weighs more than object, then carry.
+		if weight > object_weight:
+			grab_type = 'carry'
+		## If player weighs up to 1 less than object, then drag.
+		elif weight >= object_weight-1:
+			grab_type = 'drag'
+		# If object weighs too much, then cannot grab.
+		else:
+			drop(grabbed_object)
+	
+	# - Grab -
+	## Carry
+	if grab_type == 'carry':
+		carry(grabbed_object)
+	## Drag
+	elif grab_type == 'drag':
+		drag(grabbed_object)
+
+# - Carry -
+func carry(object : RigidBody2D):
+	# Store certain object data
+	
+	
+	
+	# Restrict object's individual movement
+	## Freeze
+	object.freeze = true
+	## Remove collision
+	object_collision.disabled = true
+	
+	
+	# Move object to above player
+	object.global_position.x = position.x + (10*facing_direction)
+	object.global_position.y = position.y - 10
+	
+	# Animation
+	ANIMATE.play('reach')
+
+
+# - Drag -
+func drag(object : RigidBody2D):
+	position.x = object.global_position.x + object_collision.shape.size.x
+	if Input.is_action_pressed("LEFT") or Input.is_action_pressed('RIGHT'):
+		object.linear_velocity.x = 10 * facing_direction
+		object.global_position.x = object.global_position.x + (1*facing_direction)
+	
+	if object.linear_velocity.y != 0:
+		drop(grabbed_object)
+
+
+# - Drop -
+func drop(object: RigidBody2D):
+	# Undo restrictions to object
+	## Enable physics
+	object.freeze = false
+	## Enable collision
+	object_collision.disabled = false
+	# Remove object from grab
+	is_grabbing = false
+	grabbed_object = null
 
 
 
@@ -373,7 +421,7 @@ func grab():
 
 # -- GRAVITY --
 func gravity(delta):
-	var max_fall_speed = weight*75
+	var max_fall_speed = weight*100
 	if not is_on_floor():
 		# Fall
 		## If reaches max fall speed, limit fall.
@@ -381,7 +429,7 @@ func gravity(delta):
 			pass
 		## Regular gravity
 		else:
-			velocity.y += get_gravity().y * delta *  weight / 3
+			velocity.y += 300 *  weight * delta
 		# If falling
 		if velocity.y > 0:
 			ANIMATE.play('fall')

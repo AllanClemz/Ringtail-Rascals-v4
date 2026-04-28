@@ -33,11 +33,13 @@ texture = ExtResource("2_kbw0k")
 position = Vector2(0, 112)
 metadata/is_facing_left = true
 
-[node name="Box" parent="." unique_id=1759980651 instance=ExtResource("4_2x0wv")]
-position = Vector2(190, 108)
+[node name="Box1" parent="." unique_id=1759980651 instance=ExtResource("4_2x0wv")]
+position = Vector2(135, 58)
 
 [node name="Box2" parent="." unique_id=1336923110 instance=ExtResource("4_2x0wv")]
 position = Vector2(91, 107)
+
+[node name="Sprite2D2" type="Sprite2D" parent="Box2" unique_id=1730361119]
 
 [node name="Box3" parent="." unique_id=572618232 instance=ExtResource("4_2x0wv")]
 position = Vector2(42, 108)
