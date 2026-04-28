@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://dvqqe8osxfnl3" path="res://Assets/Texture Grounds/City V2.1.png" id="2_2yknt"]
 [ext_resource type="PackedScene" uid="uid://drh62ngkglu4q" path="res://Scenes/Objects/dumpster.tscn" id="2_juae2"]
 [ext_resource type="PackedScene" uid="uid://be1srvyy42ckw" path="res://Scenes/Objects/ladder.tscn" id="3_humt6"]
-[ext_resource type="PackedScene" uid="uid://crrychvg7vnek" path="res://Scenes/Objects/box.tscn" id="5_3x4m2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xbyf6"]
 size = Vector2(320, 208)
@@ -48,9 +47,3 @@ position = Vector2(0, 32)
 
 [node name="Ladder4" parent="Ladder" unique_id=922451251 instance=ExtResource("3_humt6")]
 position = Vector2(0, 48)
-
-[node name="Box" parent="." unique_id=1759980651 instance=ExtResource("5_3x4m2")]
-position = Vector2(112, -20)
-
-[node name="Box2" parent="." unique_id=971441602 instance=ExtResource("5_3x4m2")]
-position = Vector2(112, -28)

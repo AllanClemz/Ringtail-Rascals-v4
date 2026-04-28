@@ -312,7 +312,7 @@ func climb():
 # The object being grabbed
 var grabbed_object : RigidBody2D
 ## The object's collision
-var object_collision : CollisionShape2D
+var object_collision
 # If player is grabbing an object
 var is_grabbing : bool
 func grab():
@@ -374,10 +374,6 @@ func grab():
 
 # - Carry -
 func carry(object : RigidBody2D):
-	# Store certain object data
-	
-	
-	
 	# Restrict object's individual movement
 	## Freeze
 	object.freeze = true
@@ -395,12 +391,12 @@ func carry(object : RigidBody2D):
 
 # - Drag -
 func drag(object : RigidBody2D):
-	position.x = object.global_position.x + object_collision.shape.size.x
+	velocity.x = object.linear_velocity.x
 	if Input.is_action_pressed("LEFT") or Input.is_action_pressed('RIGHT'):
-		object.linear_velocity.x = 10 * facing_direction
-		object.global_position.x = object.global_position.x + (1*facing_direction)
+		object.linear_velocity.x = 40*facing_direction
 	
-	if object.linear_velocity.y != 0:
+	# Drop if fall
+	if object.linear_velocity.y != 0 or velocity.y != 0:
 		drop(grabbed_object)
 
 
