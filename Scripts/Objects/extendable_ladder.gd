@@ -13,7 +13,7 @@ func _ready():
 	## Starting ladder length
 	var STARTING_LENGTH : int
 	for i in get_children():
-		if i == $Ladder:
+		if i.:
 			STARTING_LENGTH += 1
 	#
 	AREA_COLLISION.shape.size.y = (16 * STARTING_LENGTH)
