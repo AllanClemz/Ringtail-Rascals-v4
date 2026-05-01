@@ -74,7 +74,7 @@ size = Vector2(19, 8)
 [node name="Dumpster" type="RigidBody2D" unique_id=1423038216]
 collision_layer = 3
 lock_rotation = true
-metadata/weight = 10.0
+metadata/weight = 4.0
 
 [node name="Sprites" type="Node2D" parent="." unique_id=678587715]
 

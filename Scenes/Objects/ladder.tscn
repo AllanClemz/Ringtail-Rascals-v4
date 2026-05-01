@@ -5,9 +5,6 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6713q"]
 size = Vector2(16, 16)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_2g1wp"]
-size = Vector2(16, 16)
-
 [node name="Ladder" type="StaticBody2D" unique_id=2076361498]
 z_index = -10
 collision_layer = 2
@@ -24,10 +21,3 @@ region_rect = Rect2(16, 16, 16, 16)
 visible = false
 position = Vector2(8, 8)
 shape = SubResource("RectangleShape2D_6713q")
-
-[node name="Area2D" type="Area2D" parent="." unique_id=1891483428]
-visible = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=2062189365]
-position = Vector2(8, 8)
-shape = SubResource("RectangleShape2D_2g1wp")

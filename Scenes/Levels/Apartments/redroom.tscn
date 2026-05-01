@@ -32,14 +32,10 @@ offset_bottom = 40.0
 texture = ExtResource("2_kbw0k")
 
 [node name="Door to Room" parent="." unique_id=1890197926 instance=ExtResource("3_5n80b")]
-position = Vector2(0, 112)
-metadata/is_facing_left = true
+position = Vector2(16, 112)
 
 [node name="Box Small" parent="." unique_id=1047531772 instance=ExtResource("4_4rkdj")]
 position = Vector2(44, 104)
-
-[node name="Box Small2" parent="." unique_id=98813688 instance=ExtResource("4_4rkdj")]
-position = Vector2(271, 83)
 
 [node name="Box Tall" parent="." unique_id=2027997145 instance=ExtResource("5_yxcwn")]
 position = Vector2(95, 103)

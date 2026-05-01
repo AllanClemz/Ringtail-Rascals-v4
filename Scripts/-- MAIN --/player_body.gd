@@ -343,7 +343,6 @@ func grab():
 	if is_grabbing:
 		for i in grabbed_object.get_children():
 			if i is CollisionShape2D or i is CollisionPolygon2D:
-				print('AGH')
 				object_collision = i
 	
 	
@@ -391,13 +390,17 @@ func carry(object : RigidBody2D):
 
 # - Drag -
 func drag(object : RigidBody2D):
+	# Ungrab
+	## If fall or not on floor
+	if object.linear_velocity.y != 0 or velocity.y != 0 or not is_on_floor():
+		drop(grabbed_object)
+	
+	#
 	velocity.x = object.linear_velocity.x
 	if Input.is_action_pressed("LEFT") or Input.is_action_pressed('RIGHT'):
 		object.linear_velocity.x = 40*facing_direction
 	
-	# Drop if fall
-	if object.linear_velocity.y != 0 or velocity.y != 0:
-		drop(grabbed_object)
+
 
 
 # - Drop -
